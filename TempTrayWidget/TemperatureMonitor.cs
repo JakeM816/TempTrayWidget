@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using LibreHardwareMonitor.Hardware;
 
 namespace TempTrayWidget
@@ -41,5 +42,14 @@ namespace TempTrayWidget
             }
             return (cpuTemp, gpuTemp);
         }
+        public IEnumerable<ISensor> GetAllSensors()
+        {
+            foreach (var hw in _computer.Hardware)
+            {
+                hw.Update();
+                foreach (var s in hw.Sensors) yield return s;
+            }
+        }
+
     }
 }
