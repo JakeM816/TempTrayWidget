@@ -76,5 +76,23 @@ namespace TempTrayWidget
             return coreSensors;
         }
 
+        public IList<ISensor> GetGpuCoreLoadSensors()
+        {
+            var coreSensors = new List<ISensor>();
+            foreach (var hw in _computer.Hardware)
+            {
+                if (hw.HardwareType == HardwareType.GpuAmd ||
+                         hw.HardwareType == HardwareType.GpuNvidia)
+                {
+                    hw.Update();
+                    coreSensors.AddRange(
+                        hw.Sensors
+                          .Where(s => s.SensorType == SensorType.Load && s.Value.HasValue)
+                    );
+                }
+            }
+            return coreSensors;
+        }
+
     }
 }
